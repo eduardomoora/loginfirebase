@@ -1,27 +1,36 @@
-<div class="limiter">
+<div class="limiter animated fadeInRight">
     <div class="container-login100">
         <div class="wrap-login100 p-t-50 p-b-90">
-            <form class="login100-form validate-form flex-sb flex-w">
+            <form  (ngSubmit)="logIn(login)" #login="ngForm"
+            class="login100-form validate-form flex-sb flex-w">
 
                 <span class="login100-form-title p-b-51">
                     Login
                 </span>
 
-                <!-- <span class="text-danger">El correo es obligatorio</span> -->
+                <span *ngIf="login.submitted && login.controls['email'].errors" class="text-danger">El correo es obligatorio</span> 
                 <div class="wrap-input100 m-b-16">
-                    <input class="input100" 
+                    <input class="input100"
+                    
+                          [(ngModel)]="userLogin.email"
                            type="text" 
-                           name="username" 
-                           placeholder="Username">
+                           name="email" 
+                           email
+                           required
+                           placeholder="Email or username">
+                           
 
                     <span class="focus-input100"></span>
                 </div>
                 
-                <!-- <span class="text-danger">La contraseña debe de ser más de 6 letras</span> -->
+                 <span *ngIf="login.submitted && login.controls['pass'].errors" class="text-danger">La contraseña debe de ser más de 6 letras</span>
                 <div class="wrap-input100 m-b-16" data-validate = "Password is required">
                     <input class="input100"
+                    [(ngModel)]="userLogin.password"
                            type="password" 
-                           name="pass" 
+                           name="pass"
+                           minlength="6"
+                           required
                            placeholder="Password">
                     <span class="focus-input100"></span>
                 </div>
