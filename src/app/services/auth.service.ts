@@ -31,7 +31,7 @@ export class AuthService {
 
 
 logout(){
-
+localStorage.removeItem('token');
  }
 
 
@@ -74,10 +74,14 @@ signup(usuario:UsuarioModel){
 }
 
 //save token localstorage
+
 private saveToken(idToken:string){
 
   this.userToken=idToken;
   localStorage.setItem('token',idToken);
+  let expire = new Date();
+  expire.setSeconds(3600);
+  localStorage.setItem('dateExpire',expire.getTime().toString());
 
 }
 
@@ -88,6 +92,25 @@ readToken(){
     this.userToken='';
   }
   return this.userToken;
+}
+
+//authenticate done
+LoginDone():boolean{
+
+if (this.userToken.length<2) {
+  return false;
+}
+
+const expire = Number(localStorage.getItem('dateExpire'));
+const expireDate= new Date();
+expireDate.setTime(expire);
+if (expireDate> new Date()) {
+  return true;
+}
+else{
+  return false;
+}
+
 }
 
 }

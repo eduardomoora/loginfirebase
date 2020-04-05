@@ -6,6 +6,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import Swal from 'sweetalert2';
 import { text } from '@angular/core/src/render3';
 import { timeout } from 'rxjs/Operators';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -13,11 +14,18 @@ import { timeout } from 'rxjs/Operators';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private http:AuthService) { }
+  constructor(private http:AuthService, private router:Router) { }
   //User
-  userLogin:UsuarioModel;
+  userLogin:UsuarioModel= new UsuarioModel();
+  remindUser=false;
+
   ngOnInit() {
-   this.userLogin = new UsuarioModel();
+  
+   if (localStorage.getItem('email')) {
+   this.userLogin.email=localStorage.getItem('email');
+   this.remindUser=true;
+  }
+
    
   }
 
@@ -42,6 +50,16 @@ export class LoginComponent implements OnInit {
   this.http.login(this.userLogin).subscribe(resp=>{
 
     Swal.close();
+
+    //Here check the status of checkbox and remind teh user's email
+    if (this.remindUser) {
+      localStorage.setItem('email',this.userLogin.email);
+    }
+    else {
+      localStorage.removeItem('email');
+    }
+    console.log("i'm here")
+    this.router.navigateByUrl('/home');
   },err=>{
 
 
@@ -64,15 +82,7 @@ export class LoginComponent implements OnInit {
        
     }
  
-/*     Swal.fire({
-      allowOutsideClick:false,
-      title:'Login',
-      text:'Ingresando...',
 
-      timer:2000
-   */
-
-    console.log(err.error.error.message)
   })
 
 
